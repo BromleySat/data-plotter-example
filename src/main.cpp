@@ -3,22 +3,19 @@
 #include <HTTPClient.h>
 #include <WebServer.h>
 #include <ArduinoJson.h>
-#include <DNSServer.h>
-#include <AsyncTCP.h>
-#include "ESPAsyncWebServer.h"
 
 // this is not commited to source. see README
 #include <secrets.h>
 
 #define DEVICE_ID "Data Plotter Example"
+#define MAX_JSON_LENGTH 250
+#define LOOP_DELAY 200
 
-DNSServer dnsServer;
-AsyncWebServer server(80);
 String serverPath = "https://bromleysat.space/data/index.html";
 
 WebServer webServer(80);
-StaticJsonDocument<250> jsonDocument;
-char buffer[250];
+StaticJsonDocument<MAX_JSON_LENGTH> jsonDocument;
+char buffer[MAX_JSON_LENGTH];
 
 int voltage = 0;
 int temperature = 0;
@@ -45,15 +42,7 @@ void getDataPlotterSite()
     Serial.println(httpResponseCode);
   }
   http.end();
-
-  if (payload == "")
-  {
-    webServer.send(200, "text/html", "Could not find redirect web app");
-  }
-  else
-  {
-    webServer.send(200, "text/html", payload);
-  }
+  webServer.send(200, "text/html", payload);
 }
 
 void getData()
@@ -122,5 +111,5 @@ void loop()
 {
   readSensorData();
   webServer.handleClient();
-  delay(800);
+  delay(LOOP_DELAY);
 }
