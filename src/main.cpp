@@ -4,21 +4,20 @@
 #include <WebServer.h>
 #include <ArduinoJson.h>
 
-// this is not commited to source. see README
-#include <secrets.h>
-
 #define DEVICE_ID "Data Plotter Example"
 #define MAX_JSON_LENGTH 250
 #define LOOP_DELAY 200
 
-String serverPath = "https://bromleysat.space/data/index.html";
+const char *SSID = "<YourWiFiSSID>";
+const char *PWD = "<YourWiFiPassword>";
 
+String serverPath = "https://bromleysat.space/data/index.html";
 WebServer webServer(80);
 StaticJsonDocument<MAX_JSON_LENGTH> jsonDocument;
 char buffer[MAX_JSON_LENGTH];
 
 int voltage = 0;
-int temperature = 0;
+float temperature = 0;
 unsigned int waterLevel = 0;
 unsigned int relayOn = 0;
 
@@ -67,7 +66,7 @@ void getConfig()
 void readSensorData()
 {
   voltage = random(-248, 248);
-  temperature = random(-12, 40);
+  temperature = random(-120, 400) / 100.0;
   waterLevel = random(0, 100);
   relayOn = random(0, 1);
 }
@@ -89,12 +88,11 @@ void connectToWiFi()
   Serial.println(WiFi.localIP());
 }
 
-void setup_routing()
+void configureRoutes()
 {
+  webServer.on("/", getDataPlotterSite);
   webServer.on("/api/data", getData);
   webServer.on("/api/config", getConfig);
-  webServer.on("/", getDataPlotterSite);
-
   webServer.enableCORS();
   webServer.begin();
 }
@@ -102,9 +100,8 @@ void setup_routing()
 void setup()
 {
   Serial.begin(9600);
-
   connectToWiFi();
-  setup_routing();
+  configureRoutes();
 }
 
 void loop()
