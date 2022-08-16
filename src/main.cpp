@@ -8,8 +8,8 @@
 #define MAX_JSON_LENGTH 250
 #define LOOP_DELAY 200
 
-const char *SSID = "<YourWiFiSSID>";
-const char *PWD = "<YourWiFiPassword>";
+const char *SSID = "<your-Wifi-SSID>";
+const char *PWD = "<your-Wifi-passoword>";
 
 String serverPath = "https://bromleysat.space/data/index.html";
 WebServer webServer(80);

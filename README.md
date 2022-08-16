@@ -1,10 +1,9 @@
 # data plotter example
 
-To complie the code need to add secrets.h to the 'src' directory
-It should contain the following lines
+Replace these with your WiFi credentials to allow the device to connect to the internet
 
 '
-const char *SSID = "<your-Wifi-SSID?";
+const char *SSID = "<your-Wifi-SSID";
 const char *PWD = "<your-Wifi-passoword>"; 
 
 '
